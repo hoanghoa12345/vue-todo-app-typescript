@@ -1,4 +1,6 @@
-# todo-app-typescript
+# Vue Todo App with Typescript and Vue 3
+
+<img src="src/assets/todo_app_typescript.png" atl="vue todo app using typescript">
 
 ## Project setup
 ```

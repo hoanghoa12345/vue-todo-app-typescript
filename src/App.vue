@@ -1,27 +1,37 @@
-<template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
-</template>
-
 <script lang="ts">
-import { defineComponent } from "vue";
-import HelloWorld from "./components/HelloWorld.vue";
-
+import { computed, defineComponent, onMounted } from "vue";
+import NewItem from "./components/NewItem.vue";
+import TodoList from "./components/TodoList.vue";
+import { useStore } from "./store";
+import { ActionTypes } from "./store/actions";
 export default defineComponent({
-  name: "App",
-  components: {
-    HelloWorld,
+  components: { TodoList, NewItem },
+  setup() {
+    const store = useStore();
+    const loading = computed(() => store.state.loading);
+    onMounted(() => store.dispatch(ActionTypes.GetTodoItems));
+    const completedCount = computed(() => store.getters.completedCount);
+    const totalCount = computed(() => store.getters.totalCount);
+    return { loading, completedCount, totalCount };
   },
 });
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+<template>
+  <div class="container mx-auto mt-4">
+    <h1 class="text-3xl text-center p-2 font-bold">
+      Vue 3 Todo App with Typescript and Vuex 4
+    </h1>
+
+    <div v-if="loading">
+      <h3 class="text-center mt-4">Loading...</h3>
+    </div>
+    <div v-else>
+      <p class="text-center mt-2">
+        {{ completedCount }} of {{ totalCount }} completed.
+      </p>
+      <NewItem />
+      <TodoList />
+    </div>
+  </div>
+</template>
